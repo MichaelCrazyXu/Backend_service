@@ -1,0 +1,10 @@
+CREATE TABLE user_tbl(uid serial PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(100), password VARCHAR(255), area VARCHAR(255), birthday date, qq VARCHAR(20),wechat VARCHAR(100));
+comment on table user_tbl is '用户表';
+comment on column user_tbl.uid is '主键';
+comment on column user_tbl.name is '名称';
+comment on column user_tbl.email is '电子邮件';
+comment on column user_tbl.password is '密码';
+comment on column user_tbl.area is '国家和地区';
+comment on column user_tbl.birthday is '生日';
+comment on column user_tbl.qq is 'QQ';
+comment on column user_tbl.wechat is '微信号';
