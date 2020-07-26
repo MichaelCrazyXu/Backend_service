@@ -9,6 +9,7 @@ public class Result<T> {
     private int code;
     private String message;
     private T data;
+    private int total;
 
     public Result setCode(ResultCode resultCode) {
         this.code = resultCode.code();
@@ -34,6 +35,15 @@ public class Result<T> {
 
     public Result setData(T data) {
         this.data = data;
+        return this;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public Result setTotal(int total) {
+        this.total = total;
         return this;
     }
 

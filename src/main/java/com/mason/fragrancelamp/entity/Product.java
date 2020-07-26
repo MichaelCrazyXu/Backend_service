@@ -9,4 +9,5 @@ public class Product {
 
     private String pid;
     private String pName;
+    private byte[] image;
 }

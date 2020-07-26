@@ -19,6 +19,14 @@ public class ResultGenerator {
                 .setData(data);
     }
 
+    public static <T> Result<T> genSuccessResult(T data, int total) {
+        return new Result()
+                .setCode(ResultCode.SUCCESS)
+                .setMessage(DEFAULT_SUCCESS_MESSAGE)
+                .setData(data)
+                .setTotal(total);
+    }
+
     public static Result genFailResult(String message) {
         return new Result()
                 .setCode(ResultCode.INTERNAL_SERVER_ERROR)
