@@ -1,7 +1,7 @@
 package com.mason.fragrancelamp.mapper;
 
+import com.mason.fragrancelamp.entity.PageRequest;
 import com.mason.fragrancelamp.entity.Product;
-import com.mason.fragrancelamp.entity.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -9,30 +9,60 @@ import java.util.List;
 @Mapper
 public interface ProductMapper {
 
-    @Select("select * from product_tbl")
-    List<Product> getProducts();
+    @Select({"<script>",
+            "select * from product_tbl ",
+            "WHERE 1=1",
+            "<when test='product_name!=null and product_name != \"\"'>",
+            "AND product_name like CONCAT('%',#{product_name},'%') ",
+            "</when>",
+            "<when test='product_type_id!=null and product_type_id != \"\"'>",
+            "AND product_type_id = #{product_type_id}",
+            "</when>",
+            "order by id ${sort} limit #{limit} offset #{limit}*(#{page} - 1)",
+            "</script>"})
+    List<Product> getProducts(PageRequest pageRequest);
 
-    @Insert("insert into product_tbl(pid,pname) " +
-            "values (#{pid},#{name})")
+    @Select({"<script>",
+            "select count(id) from product_tbl ",
+            "WHERE 1=1",
+            "<when test='product_name!=null and product_name != \"\"'>",
+            "AND product_name like CONCAT('%',#{product_name},'%') ",
+            "</when>",
+            "<when test='product_type_id!=null and product_type_id != \"\"'>",
+            "AND product_type_id = #{product_type_id}",
+            "</when>",
+            "</script>"})
+    int getTotalCount(PageRequest pageRequest);
+
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Insert("insert into product_tbl(product_name," +
+            "product_type_id,product_description,create_time) " +
+            "values (#{product_name}," +
+            " #{product_type_id}," +
+            " #{product_description}," +
+            " now())")
     void addProduct(Product product);
 
-    @Select("select * from product_tbl where pid = #{pid}")
-    Product getProductByID(@Param("pid") String pid);
+    @Select("select * from product_tbl where pid = #{id}")
+    Product getProductByID(@Param("id") String id);
 
     @Update({"<script>",
             "update product_tbl",
             "<set>",
-            "<if test='pid != null'>",
-            "pid = #{pid} ,",
+            "<if test='product_name != null'>",
+            "product_name = #{product_name} ,",
             "</if>",
-            "<if test='pname != null'>",
-            "pname = #{pname} ,",
+            "<if test='product_type_id != null'>",
+            "product_type_id = #{product_type_id} ,",
+            "</if>",
+            "<if test='product_description != null'>",
+            "product_description = #{product_description} ,",
             "</if>",
             "</set>",
-            "where pid = #{pid}",
+            "where id = #{id}",
             "</script>"})
     int updateProduct(Product product);
 
-    @Delete("delete from product_tbl where pid = #{pid}")
-    int deleteProduct(@Param("pid") String pid);
+    @Delete("delete from product_tbl where id = #{id}")
+    int deleteProduct(@Param("id") int id);
 }

@@ -7,13 +7,12 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class Product {
+public class Type {
 
     private int id;
-    private String product_key;
-    private String product_name;
-    private String product_type_id;
-    private String description;
+    private String type_name;
+    private String type_description;
+    private String type_authentication;
+    private byte[] image;
     private Date create_time;
-
 }

@@ -20,5 +20,11 @@ public class PageRequest {
     private String role;
     private String department;
     private String sort;
+    private String product_name;
+    private String product_type_id;
 
+    private String type_name;
+    private String device_name;
+    private String communication_type;
+    private String device_id;
 }

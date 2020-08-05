@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.mason.fragrancelamp.core.Result;
 import com.mason.fragrancelamp.core.ResultGenerator;
 import com.mason.fragrancelamp.entity.PageRequest;
+import com.mason.fragrancelamp.entity.Role;
 import com.mason.fragrancelamp.entity.SysUser;
+import com.mason.fragrancelamp.service.RoleService;
 import com.mason.fragrancelamp.service.SysUserService;
-import com.sun.istack.internal.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class SysManageController {
 
     @Autowired
     SysUserService sysUserService;
+
+    @Autowired
+    RoleService roleService;
 
     @ResponseBody
     @PostMapping(value = "/sysuser/create")
@@ -83,4 +87,55 @@ public class SysManageController {
         return result.toString();
     }
 
+    @ResponseBody
+    @PostMapping(value = "/role/create")
+    public String addRole(@RequestBody Role role) {
+
+        roleService.addRole(role);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("role_id", role.getRole_id());
+        Result result = ResultGenerator.genSuccessResult(jsonObject);
+        return result.toString();
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/roles")
+    public String getRoles() {
+
+        List<Role> roleList = roleService.getRoles();
+
+        Result result = ResultGenerator.genSuccessResult(roleList);
+        return result.toString();
+    }
+
+    @ResponseBody
+    @DeleteMapping(value = "/role/delete/{role_id}")
+    public String deleteRoleByRoleId(@PathVariable("role_id") String role_id) {
+
+        int iResult = roleService.deleteByRoleId(role_id);
+        Result result = null;
+        if (iResult == 1) {
+            result = ResultGenerator.genSuccessResult();
+        } else {
+            result = ResultGenerator.genFailResult("角色没有删除");
+        }
+
+        return result.toString();
+    }
+
+    @ResponseBody
+    @PutMapping(value = "/role/update")
+    public String updateRole(@RequestBody Role role) {
+
+        int iResult = roleService.updateRole(role);
+        Result result = null;
+        if (iResult == 1) {
+            result = ResultGenerator.genSuccessResult();
+        } else {
+            result = ResultGenerator.genFailResult("角色信息没有更新");
+        }
+
+        return result.toString();
+    }
 }

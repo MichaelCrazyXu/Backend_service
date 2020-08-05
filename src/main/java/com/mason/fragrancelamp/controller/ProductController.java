@@ -1,13 +1,23 @@
 package com.mason.fragrancelamp.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.aliyuncs.RpcAcsRequest;
+import com.aliyuncs.iot.model.v20180120.*;
 import com.mason.fragrancelamp.core.Result;
 import com.mason.fragrancelamp.core.ResultGenerator;
+import com.mason.fragrancelamp.entity.Device;
+import com.mason.fragrancelamp.entity.PageRequest;
 import com.mason.fragrancelamp.entity.Product;
+import com.mason.fragrancelamp.entity.Type;
+import com.mason.fragrancelamp.service.DeviceService;
 import com.mason.fragrancelamp.service.ProductService;
+import com.mason.fragrancelamp.service.TypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ProductController {
@@ -16,53 +26,177 @@ public class ProductController {
     @Autowired
     ProductService procutService;
 
-    @ResponseBody
-    @PostMapping(value = "/addProduct")
-    public String addProduct(@RequestBody Product product) {
+    @Autowired
+    TypeService typeService;
 
-        procutService.addProduct(product);
+    @Autowired
+    DeviceService deviceService;
+
+    @ResponseBody
+    @PostMapping(value = "/getProducts")
+    public String getProducts(@RequestBody QueryProductListRequest request) {
+        QueryProductListResponse.Data data = procutService.getProducts(request);
+
+        Result result = ResultGenerator.genSuccessResult(data);
+        return result.toString();
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/product/create")
+    public String addProduct(@RequestBody CreateProductRequest request) {
+
+        CreateProductResponse.Data response = procutService.addProduct(request);
+
+        Result result = ResultGenerator.genSuccessResult(response);
+        return result.toString();
+    }
+
+    @ResponseBody
+    @PutMapping(value = "/product/update")
+    public String updateProduct(@RequestBody UpdateProductRequest request) {
+
+        procutService.updateProduct(request);
         Result result = ResultGenerator.genSuccessResult();
-        return result.toString();
-    }
-
-    @ResponseBody
-    @PutMapping(value = "/updateProduct")
-    public String updateProduct(@RequestBody Product product) {
-
-        int iResult = procutService.updateProduct(product);
-        Result result = null;
-        if (iResult == 1) {
-            result = ResultGenerator.genSuccessResult();
-        } else {
-            result = ResultGenerator.genFailResult("产品信息没有更新");
-        }
 
         return result.toString();
     }
 
     @ResponseBody
-    @DeleteMapping(value = "/deleteProduct/{pid}")
-    public String deleteProductById(@PathVariable("pid") String pid) {
+    @DeleteMapping(value = "/product/delete/{productKey}")
+    public String deleteProductById(@PathVariable("productKey") String productKey) {
 
-        int iResult = procutService.deleteProductById(pid);
-        Result result = null;
-        if (iResult == 1) {
-            result = ResultGenerator.genSuccessResult();
-        } else {
-            result = ResultGenerator.genFailResult("产品信息没有删除");
-        }
+        procutService.deleteProductByProductKey(productKey);
+
+        Result result = ResultGenerator.genSuccessResult();
 
         return result.toString();
     }
 
     @ResponseBody
-    @GetMapping(value = "/getProduct/{pid}")
-    public String getProductById(@PathVariable("pid") String pid) {
-        Product product = procutService.getProductById(pid);
+    @GetMapping(value = "/getProduct/{id}")
+    public String getProductById(@PathVariable("id") String id) {
+        Product product = procutService.getProductById(id);
 
         Result result = ResultGenerator.genSuccessResult(product);
         return result.toString();
     }
 
+    // #########################   Type   ##############################
+    @ResponseBody
+    @PostMapping(value = "/getTypes")
+    public String getTypes(@RequestBody PageRequest pageQuery) {
+        List<Type> types = typeService.getTypes(pageQuery);
+
+        int total = typeService.getTotalCount(pageQuery);
+
+        Result result = ResultGenerator.genSuccessResult(types, total);
+        return result.toString();
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/type/create")
+    public String addType(@RequestBody Type type) {
+
+        int id = typeService.addType(type);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+
+        PageRequest pageQuery = new PageRequest();
+        int total = typeService.getTotalCount(pageQuery);
+
+        Result result = ResultGenerator.genSuccessResult(jsonObject, total);
+        return result.toString();
+    }
+
+
+    @ResponseBody
+    @PutMapping(value = "/type/update")
+    public String updateType(@RequestBody Type type) {
+
+        int iResult = typeService.updateType(type);
+        Result result = null;
+        if (iResult == 1) {
+            result = ResultGenerator.genSuccessResult();
+        } else {
+            result = ResultGenerator.genFailResult("类型信息没有更新");
+        }
+
+        return result.toString();
+    }
+
+    @ResponseBody
+    @DeleteMapping(value = "/type/delete/{id}")
+    public String deleteTypeById(@PathVariable("id") int id) {
+
+        int iResult = typeService.deleteTypeById(id);
+
+        Result result = null;
+        if (iResult == 1) {
+            result = ResultGenerator.genSuccessResult();
+        } else {
+            result = ResultGenerator.genFailResult("类型信息没有删除");
+        }
+
+        return result.toString();
+    }
+
+    // #########################   Device   ##############################
+    @ResponseBody
+    @PostMapping(value = "/getDevices")
+    public String getDevices(@RequestBody PageRequest pageQuery) {
+        List<Device> devices = deviceService.getDevices(pageQuery);
+
+        int total = deviceService.getTotalCount(pageQuery);
+
+        Result result = ResultGenerator.genSuccessResult(devices, total);
+        return result.toString();
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/device/create")
+    public String addDevice(@RequestBody Device device) {
+
+        int id = deviceService.addDevice(device);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+
+        PageRequest pageQuery = new PageRequest();
+        int total = deviceService.getTotalCount(pageQuery);
+
+        Result result = ResultGenerator.genSuccessResult(jsonObject, total);
+        return result.toString();
+    }
+
+
+    @ResponseBody
+    @PutMapping(value = "/device/update")
+    public String updateDevice(@RequestBody Device device) {
+
+        int iResult = deviceService.updateDevice(device);
+        Result result = null;
+        if (iResult == 1) {
+            result = ResultGenerator.genSuccessResult();
+        } else {
+            result = ResultGenerator.genFailResult("设备信息没有更新");
+        }
+
+        return result.toString();
+    }
+
+    @ResponseBody
+    @DeleteMapping(value = "/device/delete/{id}")
+    public String deleteDeviceById(@PathVariable("id") int id) {
+
+        int iResult = deviceService.deleteDeviceById(id);
+
+        Result result = null;
+        if (iResult == 1) {
+            result = ResultGenerator.genSuccessResult();
+        } else {
+            result = ResultGenerator.genFailResult("设备信息没有删除");
+        }
+
+        return result.toString();
+    }
 
 }
