@@ -17,4 +17,5 @@ public interface DeviceService {
     int updateDevice(Device device);
 
     int deleteDeviceById(@Param("id") int id);
+
 }

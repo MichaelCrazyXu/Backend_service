@@ -1,34 +1,49 @@
 package com.mason.fragrancelamp.mapper;
 
-import com.mason.fragrancelamp.entity.Role;
+import com.mason.fragrancelamp.entity.Menu;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
-public interface RoleMapper {
+public interface MenuMapper {
 
-        @Select("select * from role_tbl order by role_id")
-    List<Role> getRoles();
+    @Select("select * from menu_tbl order by menu_id")
+    List<Menu> getMenus();
 
-    @Insert("insert into role_tbl(role_id,role_name,role_description,create_time)" +
-            "values (#{role_id},#{role_name},#{role_description}, now())")
-    void addRole(Role role);
+    @Select({"<script>",
+            "select count(menu_id) from menu_tbl ",
+            "WHERE 1=1",
+            "</script>"})
+    int getTotalCount();
+
+    @Insert("insert into menu_tbl(pid,name,url,sort,type,path,level)" +
+            "values (#{pid},#{name},#{url},#{sort},#{type},#{path},#{level})")
+    void addMenu(Menu menu);
 
     @Update({"<script>",
-            "update role_tbl",
+            "update menu_tbl",
             "<set>",
-            "<if test='role_name != null'>",
-            "role_name = #{role_name} ,",
+            "<if test='name != null'>",
+            "name = #{name} ,",
             "</if>",
-            "<if test='role_description != null'>",
-            "role_description = #{role_description} ,",
+            "<if test='url != null'>",
+            "url = #{url} ,",
+            "</if>",
+            "<if test='sort != null'>",
+            "sort = #{sort} ,",
+            "</if>",
+            "<if test='type != null'>",
+            "type = #{type} ,",
+            "</if>",
+            "<if test='path != null'>",
+            "path = #{path} ,",
             "</if>",
             "</set>",
-            "where role_id = #{role_id}",
+            "where menu_id = #{menu_id}",
             "</script>"})
-    int updateRole(Role role);
+    int updateMenu(Menu menu);
 
-    @Delete("delete from role_tbl where role_id = #{role_id}")
-    int deleteRole(@Param("role_id") String role_id);
+    @Delete("delete from menu_tbl where menu_id = #{menu_id}")
+    int deleteMenu(@Param("menu_id") int menu_id);
 }

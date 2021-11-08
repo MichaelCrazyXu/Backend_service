@@ -48,4 +48,5 @@ public class DeviceServiceImpl implements DeviceService {
         int result = deviceMapper.deleteDevice(id);
         return result;
     }
+
 }

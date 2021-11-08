@@ -1,8 +1,8 @@
 package com.mason.fragrancelamp.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.aliyuncs.RpcAcsRequest;
-import com.aliyuncs.iot.model.v20180120.*;
+import com.aliyuncs.iot.model.v20180120.CreateProductRequest;
+import com.aliyuncs.iot.model.v20180120.CreateProductResponse;
 import com.mason.fragrancelamp.core.Result;
 import com.mason.fragrancelamp.core.ResultGenerator;
 import com.mason.fragrancelamp.entity.Device;
@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,43 +35,45 @@ public class ProductController {
 
     @ResponseBody
     @PostMapping(value = "/getProducts")
-    public String getProducts(@RequestBody QueryProductListRequest request) {
-        QueryProductListResponse.Data data = procutService.getProducts(request);
+    public String getProducts(@RequestBody PageRequest pageRequest) {
+        List<Product> products = procutService.getProducts(pageRequest);
 
-        Result result = ResultGenerator.genSuccessResult(data);
+        int total = procutService.getTotalCount(pageRequest);
+
+        Result result = ResultGenerator.genSuccessResult(products, total);
         return result.toString();
     }
 
-    @ResponseBody
-    @PostMapping(value = "/product/create")
-    public String addProduct(@RequestBody CreateProductRequest request) {
+//    @ResponseBody
+//    @PostMapping(value = "/product/create")
+//    public String addProduct(@RequestBody CreateProductRequest request) {
+//
+//        CreateProductResponse.Data response = procutService.addProduct(request);
+//
+//        Result result = ResultGenerator.genSuccessResult(response);
+//        return result.toString();
+//    }
 
-        CreateProductResponse.Data response = procutService.addProduct(request);
-
-        Result result = ResultGenerator.genSuccessResult(response);
-        return result.toString();
-    }
-
-    @ResponseBody
-    @PutMapping(value = "/product/update")
-    public String updateProduct(@RequestBody UpdateProductRequest request) {
-
-        procutService.updateProduct(request);
-        Result result = ResultGenerator.genSuccessResult();
-
-        return result.toString();
-    }
-
-    @ResponseBody
-    @DeleteMapping(value = "/product/delete/{productKey}")
-    public String deleteProductById(@PathVariable("productKey") String productKey) {
-
-        procutService.deleteProductByProductKey(productKey);
-
-        Result result = ResultGenerator.genSuccessResult();
-
-        return result.toString();
-    }
+//    @ResponseBody
+//    @PutMapping(value = "/product/update")
+//    public String updateProduct(@RequestBody UpdateProductRequest request) {
+//
+//        procutService.updateProduct(request);
+//        Result result = ResultGenerator.genSuccessResult();
+//
+//        return result.toString();
+//    }
+//
+//    @ResponseBody
+//    @DeleteMapping(value = "/product/delete/{productKey}")
+//    public String deleteProductById(@PathVariable("productKey") String productKey) {
+//
+//        procutService.deleteProductByProductKey(productKey);
+//
+//        Result result = ResultGenerator.genSuccessResult();
+//
+//        return result.toString();
+//    }
 
     @ResponseBody
     @GetMapping(value = "/getProduct/{id}")
@@ -199,4 +202,35 @@ public class ProductController {
         return result.toString();
     }
 
+//    @ResponseBody
+//    @PostMapping(value = "/queryDevices")
+//    public String getDevices(@RequestBody QueryDeviceRequest request) {
+//
+//        QueryDeviceResponse response = deviceService.queryDevice(request);
+//
+////        // 填充请求
+////        BatchQueryDeviceDetailRequest batchDetailRequest = new BatchQueryDeviceDetailRequest();
+////        List<String> deviceNames = new ArrayList<String>(); // 目标设备名列表
+////        for (QueryDeviceResponse.DeviceInfo item : response.getData()) {
+////            deviceNames.add(item.getDeviceName());
+////        }
+////
+////        List<BatchQueryDeviceDetailResponse.DataItem> deviceDetailList =
+////                DeviceManager.batchQueryDeviceDetail(request.getProductKey(), deviceNames);
+//
+//        Result result = ResultGenerator.genSuccessResult(response);
+//        return result.toString();
+//    }
+//
+//    @ResponseBody
+//    @PostMapping(value = "/device/create")
+//    public String addDevice(@RequestBody RegisterDeviceRequest request) {
+//
+//        RegisterDeviceResponse.Data data = deviceService.registerDevice(
+//                request.getProductKey(),
+//                request.getDeviceName());
+//
+//        Result result = ResultGenerator.genSuccessResult(data);
+//        return result.toString();
+//    }
 }

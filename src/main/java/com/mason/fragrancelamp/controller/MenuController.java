@@ -3,25 +3,28 @@ package com.mason.fragrancelamp.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.mason.fragrancelamp.core.Result;
 import com.mason.fragrancelamp.core.ResultGenerator;
-import com.mason.fragrancelamp.entity.User;
-import com.mason.fragrancelamp.service.UserService;
+import com.mason.fragrancelamp.entity.Menu;
+import com.mason.fragrancelamp.entity.PageRequest;
+import com.mason.fragrancelamp.service.MenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-public class UserController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+public class MenuController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MenuController.class);
 
     @Autowired
-    UserService userService;
+    MenuService menuService;
 
     @ResponseBody
-    @PostMapping(value = "/addUser")
-    public String addUser(@RequestBody User user) {
+    @PostMapping(value = "/menu/create")
+    public String addMenu(@RequestBody Menu menu) {
 
-        int uid = userService.addUser(user);
+        int uid = menuService.addMenu(menu);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("uid", uid);
         Result result = ResultGenerator.genSuccessResult(jsonObject);
@@ -29,41 +32,43 @@ public class UserController {
     }
 
     @ResponseBody
-    @PutMapping(value = "/updateUser")
-    public String updateUser(@RequestBody User user) {
+    @PutMapping(value = "/menu/update")
+    public String updateMenu(@RequestBody Menu menu) {
 
-        int iResult = userService.updateUser(user);
+        int iResult = menuService.updateMenu(menu);
         Result result = null;
         if (iResult == 1) {
             result = ResultGenerator.genSuccessResult();
         } else {
-            result = ResultGenerator.genFailResult("用户信息没有更新");
+            result = ResultGenerator.genFailResult("菜单信息没有更新");
         }
 
         return result.toString();
     }
 
     @ResponseBody
-    @DeleteMapping(value = "/deleteUser/{uid}")
-    public String deleteUserById(@PathVariable("uid") int uid) {
+    @DeleteMapping(value = "/menu/delete/{menuId}")
+    public String deleteMenuById(@PathVariable("menuId") int menuId) {
 
-        int iResult = userService.deleteUserById(uid);
+        int iResult = menuService.deleteMenuById(menuId);
         Result result = null;
         if (iResult == 1) {
             result = ResultGenerator.genSuccessResult();
         } else {
-            result = ResultGenerator.genFailResult("用户信息没有删除");
+            result = ResultGenerator.genFailResult("菜单信息没有删除");
         }
 
         return result.toString();
     }
 
     @ResponseBody
-    @GetMapping(value = "/getUser/{uid}")
-    public String getUserById(@PathVariable("uid") int uid) {
-        User user = userService.getUserById(uid);
+    @GetMapping(value = "/menus")
+    public String getMenus() {
+        List<Menu> menus = menuService.getMenus();
 
-        Result result = ResultGenerator.genSuccessResult(user);
+        int total = menuService.getTotalCount();
+
+        Result result = ResultGenerator.genSuccessResult(menus, total);
         return result.toString();
     }
 

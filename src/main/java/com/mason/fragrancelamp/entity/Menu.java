@@ -7,13 +7,15 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class Product {
+public class Menu {
 
-    private int id;
-    private String product_key;
-    private String product_name;
-    private String product_type_id;
-    private String description;
-    private Date create_time;
+    private int menu_id;
+    private int pid;
+    private String name;
+    private String path;
+    private String url;
+    private int sort;
+    private String type;
+    private int level;
 
 }

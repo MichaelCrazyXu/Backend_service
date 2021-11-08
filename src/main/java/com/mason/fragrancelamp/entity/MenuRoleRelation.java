@@ -7,11 +7,8 @@ import lombok.Setter;
 @Setter
 public class MenuRoleRelation {
 
-    private int menuId;
-    private int pid;
-    private String name;
-    private String url;
-    private String sort;
-    private String type;
+    private int id;
+    private int menu_id;
+    private String role_id;
 
 }

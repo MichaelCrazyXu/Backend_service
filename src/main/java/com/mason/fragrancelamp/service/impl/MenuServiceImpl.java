@@ -1,9 +1,9 @@
 package com.mason.fragrancelamp.service.impl;
 
+import com.mason.fragrancelamp.entity.Menu;
 import com.mason.fragrancelamp.entity.PageRequest;
-import com.mason.fragrancelamp.entity.Device;
-import com.mason.fragrancelamp.mapper.DeviceMapper;
-import com.mason.fragrancelamp.service.DeviceService;
+import com.mason.fragrancelamp.mapper.MenuMapper;
+import com.mason.fragrancelamp.service.MenuService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -11,41 +11,41 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class DeviceServiceImpl implements DeviceService {
+public class MenuServiceImpl implements MenuService {
 
     @Resource
-    DeviceMapper deviceMapper;
+    MenuMapper menuMapper;
 
     @Override
-    public List<Device> getDevices(@Param("pageRequest") PageRequest pageRequest) {
-        List<Device> deviceList = deviceMapper.getDevices(pageRequest);
-        return deviceList;
+    public List<Menu> getMenus() {
+        List<Menu> menuList = menuMapper.getMenus();
+        return menuList;
     }
 
     @Override
-    public int getTotalCount(PageRequest pageRequest) {
-        int total = deviceMapper.getTotalCount(pageRequest);
+    public int getTotalCount() {
+        int total = menuMapper.getTotalCount();
         return total;
     }
 
     @Override
-    public int addDevice(Device device) {
-        deviceMapper.addDevice(device);
+    public int addMenu(Menu menu) {
+        menuMapper.addMenu(menu);
 
-        int id = device.getId();
+        int id = menu.getMenu_id();
 
         return id;
     }
 
     @Override
-    public int updateDevice(Device device) {
-        int result = deviceMapper.updateDevice(device);
+    public int updateMenu(Menu menu) {
+        int result = menuMapper.updateMenu(menu);
         return result;
     }
 
     @Override
-    public int deleteDeviceById(int id) {
-        int result = deviceMapper.deleteDevice(id);
+    public int deleteMenuById(int id) {
+        int result = menuMapper.deleteMenu(id);
         return result;
     }
 

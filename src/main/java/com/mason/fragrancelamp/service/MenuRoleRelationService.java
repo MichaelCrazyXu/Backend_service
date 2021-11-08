@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface MenuRoleRelationService {
 
-    List<MenuRoleRelation> getMenuRoleRelations();
+    List<MenuRoleRelation> getMenuRoleRelations(String role_id);
 
     int getTotalCount();
 
     int addMenuRoleRelation(@Param("menuRoleRelation") MenuRoleRelation menuRoleRelation);
 
-    int deleteMenuRoleRelation(@Param("role_id") int role_id);
+    int deleteMenuRoleRelation(@Param("role_id") String role_id);
 
 }

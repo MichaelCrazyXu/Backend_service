@@ -1,21 +1,20 @@
 package com.mason.fragrancelamp.service;
 
-import com.mason.fragrancelamp.entity.PageRequest;
-import com.mason.fragrancelamp.entity.Device;
+import com.mason.fragrancelamp.entity.Menu;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface DeviceService {
+public interface MenuService {
 
-    List<Device> getDevices(@Param("pageRequest") PageRequest pageRequest);
+    List<Menu> getMenus();
 
-    int getTotalCount(@Param("pageRequest") PageRequest pageRequest);
+    int getTotalCount();
 
-    int addDevice(@Param("device") Device device);
+    int addMenu(@Param("menu") Menu menu);
 
-    int updateDevice(Device device);
+    int updateMenu(Menu menu);
 
-    int deleteDeviceById(@Param("id") int id);
+    int deleteMenuById(@Param("id") int id);
 
 }

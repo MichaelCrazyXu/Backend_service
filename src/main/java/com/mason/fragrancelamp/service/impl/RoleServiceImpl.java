@@ -28,6 +28,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public int updateRole(Role role) {
         int result = roleMapper.updateRole(role);
+
         return result;
     }
 
